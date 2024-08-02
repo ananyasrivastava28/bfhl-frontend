@@ -1,23 +1,50 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './App.css';
 
+
 function App() {
+  const [formData, setFormData] = useState('');
+  const [responseData, setResponseData] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const handleInputChange = (event) => {
+    setFormData(event.target.value);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post('/bfhl', { data: JSON.parse(formData) });
+      setResponseData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleOptionChange = (event) => {
+    setSelectedOptions(Array.from(event.target.selectedOptions, (option) => option.value));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input className="input-field" type="text" value={formData} onChange={handleInputChange} placeholder="Enter JSON data" />
+      <button className="submit-button" onClick={handleSubmit}>Submit</button>
+
+      {responseData && (
+        <div>
+          <select className="dropdown" multiple onChange={handleOptionChange}>
+            <option value="alphabets">Alphabets</option>
+            <option value="numbers">Numbers</option>
+            <option value="highest_alphabet">Highest Alphabet</option>
+          </select>
+
+          <div className="response-container">
+            {selectedOptions.includes('alphabets') && <p>Alphabets: {responseData.alphabets.join(', ')}</p>}
+            {selectedOptions.includes('numbers') && <p>Numbers: {responseData.numbers.join(', ')}</p>}
+            {selectedOptions.includes('highest_alphabet') && <p>Highest Alphabet: {responseData.highest_alphabet.join(', ')}</p>}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
