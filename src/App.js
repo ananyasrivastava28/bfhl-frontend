@@ -24,7 +24,7 @@ function App() {
     }
     
       console.log(formData);
-      const response = await axios.post('http://localhost:5000/bfhl',  JSON.parse(formData) );
+      const response = await axios.post('https://bfhl-backend-tau.vercel.app/bfhl',  JSON.parse(formData) );
       setResponseData(response.data);
     } catch (error) {
       console.error(error);
