@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
-
 function App() {
   const [formData, setFormData] = useState('');
   const [responseData, setResponseData] = useState(null);
@@ -14,7 +13,18 @@ function App() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('/bfhl', { data: JSON.parse(formData) });
+
+      let parsedData;
+    try {
+      parsedData = JSON.parse(formData);
+    } catch (parseError) {
+      console.error('Invalid JSON:', parseError);
+      alert('Please enter valid JSON data');
+      return;
+    }
+    
+      console.log(formData);
+      const response = await axios.post('http://localhost:5000/bfhl',  JSON.parse(formData) );
       setResponseData(response.data);
     } catch (error) {
       console.error(error);
